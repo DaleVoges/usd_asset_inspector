@@ -1,17 +1,32 @@
-# inspector/app.py
-
+import sys
 from PySide6 import QtWidgets
 from view.main_window import MainWindow
-from controller.inspector_controller import InspectorController
+from controller.controller import Controller
 
-def main():
-    app = QtWidgets.QApplication([])
+# ---- Main entry point ----
 
-    view = MainWindow()
-    controller = InspectorController(view)
+def main(argv):
+    app = QtWidgets.QApplication(argv)
+    # Create the view and pass it to the controller
+    controller = Controller()
+    main_window = MainWindow(controller=controller)  # We pass None temporarily
 
-    view.show()
-    app.exec()
+    main_window.show()
 
-if __name__ == "__main__":
-    main()
+    # # Try to open a file passed in argv
+    # if len(argv) > 1:
+    #     path = argv[1]
+    #     if os.path.exists(path):
+    #         controller.load_stage(path)
+    #     else:
+    #         QtWidgets.QMessageBox.warning(main_window, 'File not found', f"Path '{path}' not found — starting with mock stage.")
+    #         controller.load_stage(None)
+    # else:
+    #     # No path provided — open in-memory stage
+    #     controller.load_stage(None)
+
+    sys.exit(app.exec())
+
+
+if __name__ == '__main__':
+    main(sys.argv)
